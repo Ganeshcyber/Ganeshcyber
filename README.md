@@ -1,4 +1,4 @@
-<img src="assets/banner.svg" width="100%" alt="Hemanth Sai Ganesh, Builtby Hemanth" />
+<img src="assets/header.svg" width="100%" alt="Hemanth Sai Ganesh, Builtby Hemanth" />
 
 <div align="center">
 
