@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF9933,50:E8467C,100:7B3FE4&height=220&section=header&text=Hemanth%20Sai%20Ganesh&fontSize=58&fontColor=FFFFFF&fontAlignY=36&desc=Builtby%20Hemanth%20%C2%B7%20Websites%20%26%20apps%20for%20businesses&descSize=20&descAlignY=58&animation=fadeIn" width="100%" alt="Hemanth Sai Ganesh, Builtby Hemanth" />
+<img src="assets/banner.svg" width="100%" alt="Hemanth Sai Ganesh, Builtby Hemanth" />
 
 <div align="center">
 
@@ -66,4 +66,4 @@
   <img src="https://raw.githubusercontent.com/Ganeshcyber/Ganeshcyber/output/snake.svg" width="100%" alt="Snake eating my contribution graph" />
 </picture>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:7B3FE4,50:E8467C,100:FF9933&height=120&section=footer" width="100%" alt="" />
+<img src="assets/footer.svg" width="100%" alt="" />
