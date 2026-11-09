@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- Source for the profile README images. render.mjs opens this with ?p=<part>&t=light|dark and saves a PNG. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=block" rel="stylesheet" />
+<style>
+  :root {
+    --indigo: #4f46e5;
+    --indigo-soft: #eef0ff;
+    --green: #16a34a;
+  }
+  .light {
+    --bg: #ffffff;
+    --bg2: #f4f4fb;
+    --panel: #f3f3f8;
+    --line: #e6e7ee;
+    --ink: #16161c;
+    --muted: #5d606d;
+    --chip: #ffffff;
+    --accent: #4f46e5;
+    --glow: rgba(79, 70, 229, 0.16);
+    --dot: rgba(22, 22, 28, 0.07);
+    --frame: #ffffff;
+  }
+  .dark {
+    --bg: #11141c;
+    --bg2: #171a2e;
+    --panel: #181c27;
+    --line: #262b38;
+    --ink: #f4f4f7;
+    --muted: #a3a7b6;
+    --chip: #1b1f2b;
+    --accent: #8b93ff;
+    --glow: rgba(99, 91, 255, 0.28);
+    --dot: rgba(255, 255, 255, 0.06);
+    --frame: #232733;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; }
+  body { font-family: Figtree, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .part { display: none; }
+  .part.on { display: block; }
+  h1, h2, h3, .title { font-family: Archivo, sans-serif; letter-spacing: -0.025em; }
+
+  /* shared pieces */
+  .card {
+    position: relative; overflow: hidden; border-radius: 26px;
+    background: var(--bg); border: 1px solid var(--line);
+  }
+  .grid-dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(var(--dot) 1.2px, transparent 1.2px);
+    background-size: 22px 22px;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 55%, #000 100%);
+  }
+  .glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, var(--glow), transparent 68%); }
+  .browser {
+    position: absolute; border-radius: 12px; overflow: hidden; background: var(--frame);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 50px -18px rgba(15, 15, 40, 0.35), 0 2px 6px rgba(15, 15, 40, 0.08);
+  }
+  .browser .bar { height: 24px; display: flex; align-items: center; gap: 6px; padding: 0 11px; border-bottom: 1px solid var(--line); }
+  .browser .bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+  .browser .bar span { margin-left: 10px; height: 12px; flex: 1; max-width: 46%; border-radius: 6px; background: var(--line); opacity: 0.7; }
+  .browser img { display: block; width: 100%; height: calc(100% - 24px); object-fit: cover; object-position: top; }
+  .phone {
+    position: absolute; border-radius: 28px; overflow: hidden; background: #0b0b10;
+    border: 6px solid #0b0b10;
+    box-shadow: 0 26px 50px -16px rgba(10, 10, 30, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 22px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--chip);
+    font: 600 15px Figtree; color: var(--ink); white-space: nowrap;
+  }
+  .chip b { width: 8px; height: 8px; border-radius: 50%; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 999px;
+    font: 700 12.5px Figtree; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  .tag.live { color: var(--green); background: color-mix(in srgb, var(--green) 13%, transparent); }
+  .tag.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  /* hero 1200x460 */
+  #hero .card { width: 1200px; height: 460px; background: linear-gradient(135deg, var(--bg) 35%, var(--bg2)); }
+  #hero .left { position: absolute; left: 60px; top: 52px; width: 600px; }
+  #hero .brand { display: flex; align-items: center; gap: 14px; font: 700 19px Archivo; letter-spacing: -0.01em; }
+  #hero .brand img { width: 52px; height: 52px; border-radius: 14px; box-shadow: 0 6px 16px -6px rgba(0,0,0,.4); }
+  #hero .brand small { font: 500 15px Figtree; color: var(--muted); margin-left: 4px; }
+  #hero h1 { font-size: 66px; line-height: 1; font-weight: 800; margin-top: 34px; }
+  #hero p { font-size: 21px; line-height: 1.45; color: var(--muted); margin-top: 18px; max-width: 540px; }
+  #hero p strong { color: var(--ink); font-weight: 600; }
+  #hero .chips { display: flex; gap: 8px; margin-top: 28px; flex-wrap: wrap; }
+  #hero .status { position: absolute; right: 30px; top: 28px; }
+
+  /* feature card 1200x420 */
+  #feature .card { width: 1200px; height: 420px; }
+  #feature .left { position: absolute; left: 60px; top: 58px; width: 560px; }
+  #feature h2 { font-size: 54px; font-weight: 800; margin-top: 22px; display: flex; align-items: center; gap: 16px; }
+  #feature h2 img { width: 54px; height: 54px; border-radius: 14px; }
+  #feature p { font-size: 20px; line-height: 1.5; color: var(--muted); margin-top: 16px; }
+  #feature .chips { display: flex; gap: 8px; margin-top: 26px; }
+  #feature .stage { position: absolute; right: 0; top: 0; bottom: 0; width: 520px; background: linear-gradient(160deg, #0f8a6a, #0b5e49); }
+  #feature .stage::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.09) 1.2px, transparent 1.2px); background-size: 22px 22px; }
+
+  /* small cards 590x420 (products) and 590x400 (work) */
+  .small .card { width: 590px; height: 420px; }
+  .small.work .card { height: 400px; }
+  .small .stage { position: absolute; left: 14px; right: 14px; top: 14px; height: 268px; border-radius: 18px; background: var(--panel); overflow: hidden; }
+  .small.work .stage { height: 258px; }
+  .small .meta { position: absolute; left: 30px; right: 30px; bottom: 26px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .small h3 { font-size: 27px; font-weight: 700; }
+  .small .meta p { font-size: 16.5px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+  .small .go { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); color: var(--ink); }
+
+  /* buttons: transparent, trimmed by render.mjs */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 22px 0 18px;
+    border-radius: 999px; font: 650 17px Figtree; white-space: nowrap;
+    background: var(--indigo-soft); color: #16161c; border: 1px solid #dfe2ff;
+  }
+  .btn.primary { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+
+  /* call to action 1200x210 */
+  #cta .card { width: 1200px; height: 210px; background: linear-gradient(120deg, #4338ca, #4f46e5 45%, #6d5dfc); border: 0; color: #fff; }
+  #cta .card::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.12) 1.2px, transparent 1.2px); background-size: 22px 22px; mask-image: linear-gradient(90deg, transparent, #000); }
+  #cta .in { position: absolute; left: 56px; right: 56px; top: 0; bottom: 0; display: flex; align-items: center; gap: 28px; z-index: 2; }
+  #cta img { width: 92px; height: 92px; border-radius: 22px; box-shadow: 0 10px 30px -10px rgba(0,0,0,.5); }
+  #cta h2 { font-size: 36px; font-weight: 800; }
+  #cta p { font-size: 19px; opacity: .85; margin-top: 8px; }
+  #cta .wa { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; height: 58px; padding: 0 26px; border-radius: 999px; background: #fff; color: #16161c; font: 700 18px Figtree; white-space: nowrap; }
+  #cta .wa svg { width: 22px; height: 22px; }
+
+  /* soft loops for the animated parts (frames.mjs steps through them) */
+  .float { animation: float 6s ease-in-out infinite; }
+  .float.d2 { animation-delay: -2s; }
+  .float.d3 { animation-delay: -4s; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .phone img.b { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; animation: swap 6s ease-in-out infinite; }
+  @keyframes swap { 0%, 36% { opacity: 0; } 50%, 86% { opacity: 1; } 100% { opacity: 0; } }
+  #cta .wa { position: relative; }
+  #cta .wa::before { content: ""; position: absolute; inset: 0; border-radius: 999px; animation: ring 3s ease-out infinite; }
+  @keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); } 70%, 100% { box-shadow: 0 0 0 16px rgba(255, 255, 255, 0); } }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="part" id="hero">
+  <div class="card">
+    <div class="grid-dots"></div>
+    <div class="glow" style="width:760px;height:760px;right:-200px;top:-220px"></div>
+    <div class="left">
+      <div class="brand"><img src="img/logo.png" alt="" /> builtbyhemanth <small>· Hyderabad, India</small></div>
+      <h1>Hemanth Sai Ganesh</h1>
+      <p><strong>Flutter &amp; Next.js developer.</strong> I build websites and apps that local shops, clinics and schools use every day.</p>
+      <div class="chips">
+        <span class="chip"><b style="background:#42a5f5"></b>Flutter</span>
+        <span class="chip"><b style="background:#00b4ab"></b>Dart</span>
+        <span class="chip"><b style="background:var(--ink)"></b>Next.js</span>
+        <span class="chip"><b style="background:#3178c6"></b>TypeScript</span>
+        <span class="chip"><b style="background:#336791"></b>Postgres</span>
+      </div>
+    </div>
+    <div class="browser" style="left:770px;top:58px;width:400px;height:256px"><div class="bar"><i></i><i></i><i></i><span></span></div><img src="shots/builtby-desk.jpg" alt="" /></div>
+    <div class="browser" style="left:668px;top:168px;width:420px;height:268px"><div class="bar"><i></i><i></i><i></i><span></span></div><img src="shots/ramen-desk.jpg" alt="" /></div>
+    <div class="phone float d3" style="left:1012px;top:118px;width:150px;height:318px"><img src="img/ping-home.png" alt="" /><img class="b" src="img/ping-ready.png" alt="" /></div>
+  </div>
+</section>
+
+<!-- FEATURE: PingSlip -->
+<section class="part" id="feature">
+  <div class="card">
+    <div class="left">
+      <span class="tag">Flutter app · Coming soon on Google Play</span>
+      <h2>PingSlip</h2>
+      <p>Job cards for repair, tailor and laundry shops. Log a job, then one tap tells the customer it's ready, with the bill and a UPI link on WhatsApp.</p>
+      <div class="chips">
+        <span class="chip"><b style="background:#42a5f5"></b>Flutter</span>
+        <span class="chip"><b style="background:#336791"></b>Postgres</span>
+        <span class="chip"><b style="background:#25d366"></b>WhatsApp</span>
+        <span class="chip"><b style="background:#f59f00"></b>UPI links</span>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="phone float d2" style="left:70px;top:58px;width:178px;height:380px;z-index:1"><img src="img/ping-ready.png" alt="" /></div>
+      <div class="phone float" style="left:262px;top:30px;width:190px;height:405px;z-index:2"><img src="img/ping-home.png" alt="" /><img class="b" src="img/ping-cash.png" alt="" /></div>
+    </div>
+  </div>
+</section>
+
+<!-- SMALL CARDS: filled by script from the list below -->
+<section class="part small" id="small">
+  <div class="card">
+    <div class="stage">
+      <div class="browser" id="s-desk" style="left:28px;top:28px;width:384px;height:246px"><div class="bar"><i></i><i></i><i></i><span></span></div><img alt="" /></div>
+      <div class="phone" id="s-mob" style="left:398px;top:40px;width:118px;height:250px"><img alt="" /></div>
+    </div>
+    <div class="meta">
+      <div><h3 id="s-title"></h3><p id="s-sub"></p></div>
+      <div class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUTTONS -->
+<section class="part" id="btn"><span class="btn" id="b"></span></section>
+
+<!-- CTA -->
+<section class="part" id="cta">
+  <div class="card"><div class="in">
+    <img src="img/logo.png" alt="" />
+    <div><h2>Have a shop, clinic or school?</h2><p>I'll build its website or app, live in days. Free preview first.</p></div>
+    <span class="wa"><svg viewBox="0 0 24 24" fill="#25d366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"/></svg>Chat on WhatsApp</span>
+  </div></div>
+</section>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const part = q.get("p") || "hero";
+  document.body.className = q.get("t") === "dark" ? "dark" : "light";
+
+  const small = {
+    pilupu:   { title: "Pilupu", sub: "Telugu invitation websites for every family function", tag: "live", shot: "pilupu" },
+    showroom: { title: "Builtby Showroom", sub: "80+ website demos for shops, clinics and schools", tag: "live", shot: "builtby" },
+    kanaka:   { title: "Kanakadhara Jewellers", sub: "Live gold rate board and bridal sets", shot: "kanaka", work: 1 },
+    ramen:    { title: "Kaze Ramen Bar", sub: "Build-your-bowl ordering", shot: "ramen", work: 1 },
+    drishti:  { title: "Drishti Opticals", sub: "Glasses builder with the price to the rupee", shot: "drishti", work: 1 },
+    chitra:   { title: "Chitrakatha Studios", sub: "Wedding date checker and coverage planner", shot: "chitra", work: 1 },
+    madhuram: { title: "Madhuram Sweets", sub: "Fill-your-own sweet box and festival orders", shot: "madhuram", work: 1 },
+    sixer:    { title: "Sixer Arena", sub: "Turf slot booking, split per player", shot: "sixer", work: 1 },
+  };
+  const icons = {
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.8 3.9 6 3.9 9.5s-1.3 6.7-3.9 9.5c-2.6-2.8-3.9-6-3.9-9.5s1.3-6.7 3.9-9.5Z"/></svg>',
+    grid: '<svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>',
+    whatsapp: document.querySelector("#cta .wa svg").outerHTML,
+    instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="#d62976" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="#d62976" stroke="none"/></svg>',
+    linkedin: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4.5" fill="#0a66c2"/><path fill="#fff" d="M6.6 9.8h2.6V18H6.6zM7.9 5.6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10.8 9.8h2.5v1.1c.4-.7 1.3-1.3 2.6-1.3 2.7 0 3.2 1.7 3.2 4V18h-2.6v-3.9c0-1 0-2.2-1.4-2.2s-1.6 1-1.6 2.1v4h-2.7z"/></svg>',
+  };
+  const buttons = {
+    website:   { label: "builtbyhemanth.com", icon: "globe", primary: true },
+    showroom:  { label: "Showroom", icon: "grid" },
+    whatsapp:  { label: "WhatsApp", icon: "whatsapp" },
+    instagram: { label: "Instagram", icon: "instagram" },
+    linkedin:  { label: "LinkedIn", icon: "linkedin" },
+  };
+
+  if (part.startsWith("btn-")) {
+    const b = buttons[part.slice(4)];
+    const el = document.getElementById("b");
+    el.innerHTML = icons[b.icon] + b.label;
+    if (b.primary) el.classList.add("primary");
+    document.getElementById("btn").classList.add("on");
+  } else if (small[part]) {
+    const s = small[part];
+    const sec = document.getElementById("small");
+    sec.classList.add("on");
+    if (s.work) sec.classList.add("work");
+    document.querySelector("#s-desk img").src = `shots/${s.shot}-desk.jpg`;
+    document.querySelector("#s-mob img").src = `shots/${s.shot}-mob.jpg`;
+    document.getElementById("s-title").textContent = s.title;
+    document.getElementById("s-sub").textContent = s.sub;
+    if (s.tag) {
+      const t = document.createElement("span");
+      t.className = "tag live";
+      t.style.marginBottom = "12px";
+      t.textContent = "Live";
+      const box = document.getElementById("s-title").parentElement;
+      box.prepend(t);
+    }
+  } else {
+    document.getElementById(part).classList.add("on");
+  }
+</script>
+</body>
+</html>
