@@ -58,12 +58,12 @@
 ### 📈 Activity
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Ganeshcyber&layout=compact&hide_border=true&bg_color=00000000&title_color=E8467C&text_color=8B949E&langs_count=8" alt="Top languages" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=builtbyhemanth&layout=compact&hide_border=true&bg_color=00000000&title_color=E8467C&text_color=8B949E&langs_count=8" alt="Top languages" />
 </p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Ganeshcyber/Ganeshcyber/output/snake-dark.svg" />
-  <img src="https://raw.githubusercontent.com/Ganeshcyber/Ganeshcyber/output/snake.svg" width="100%" alt="Snake eating my contribution graph" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/builtbyhemanth/builtbyhemanth/output/snake-dark.svg" />
+  <img src="https://raw.githubusercontent.com/builtbyhemanth/builtbyhemanth/output/snake.svg" width="100%" alt="Snake eating my contribution graph" />
 </picture>
 
 <img src="assets/footer.svg" width="100%" alt="" />
